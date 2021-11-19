@@ -1,0 +1,15 @@
+components:
+  securitySchemes:
+    openid:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://login-stg.pwcinternal.com/openam/oauth2/authorize
+          tokenUrl: https://login-stg.pwcinternal.com/openam/oauth2/access_token
+          refreshUrl: ""
+          scopes:
+            openid: OpenID role
+            profile: users profile
+            cloudEmail: Cloud email address
+            preferredMail: Preferred email address
+            PwCPPI: PwC PPID

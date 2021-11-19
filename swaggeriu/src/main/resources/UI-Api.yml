@@ -1,0 +1,267 @@
+openapi: 3.0.1
+info:
+  title: adapter
+  version: "0.0"
+servers:
+  - url:  http://localhost:8086/
+paths:
+  /api/v1/tenants:
+    get:
+      description: get list of tenants available on given site
+      operationId: apiV1TenantsGet
+      parameters: []
+      responses:
+        "200":
+          description: list of tenants for given site
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+  /api/v1/tenants/{tenantId}:
+    get:
+      description: get list of tenants available on given site
+      operationId: apiV1TenantsTenantIdGet
+      parameters:
+        - name: tenantId
+          in: path
+          description: Id of tenant to fetch details of
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: list of tenants for given site
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+  /api/v1/tenants/{tenantId}/obligation-groups:
+    get:
+      description: get list of obligation groups for given tenants
+      operationId: apiV1TenantstenantIdObligationGroupsGet
+      parameters:
+        - name: tenantId
+          in: path
+          description: Id of tenant to fetch details of
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: list of obligation groups for given tenant
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ObligationGroup'
+  /api/v1/tenants/{tenantId}/obligation-groups/{obligationGroupId}:
+    post:
+      description: Starts synchronisation for given obligation group
+      operationId: apiV1TenantTenantIdObligationGroupsObligationGroupIdPost
+      parameters:
+        - name: tenantId
+          in: path
+          description: Id of tenant on which obligation group resides
+          required: true
+          schema:
+            type: string
+        - name: obligationGroupId
+          in: path
+          description: Id of obligation group to sync engagement with
+          required: true
+          schema:
+            type: string
+        - name: engagementId
+          in: query
+          description: Id of engagement to sync with obligation group
+          required: true
+          schema:
+            type: string
+        - name: x-on-behalf-of-ppid
+          in: header
+          description: id of EC user invoking the synchronisation
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        "200":
+          description: synchronisation for given Obligation Group started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Void'
+        "400":
+          description: Invalid input
+  /api/v1/tenants/{tenantId}/obligation-groups/{obligationGroupId}/:
+    put:
+      description: Creates link between obligation group and site
+      operationId: apiV1TenantTenantIdObligationGroupsObligationGroupIdPut
+      parameters:
+        - name: tenantId
+          in: path
+          description: Id of tenant on which obligation group resides
+          required: true
+          schema:
+            type: string
+        - name: engagementId
+          in: query
+          description: Id of engagement to link obligation group to
+          required: true
+          schema:
+            type: string
+        - name: obligationGroupId
+          in: path
+          description: Id of obligation group to link to engagement
+          required: true
+          schema:
+            type: string
+        - name: x-on-behalf-of-ppid
+          in: header
+          description: id of EC user invoking the syncronisation
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        "201":
+          description: Link between obligation group and site created
+        "400":
+          description: Invalid input
+        "409":
+          description: Link already exists
+        "200":
+          description: apiV1TenantTenantIdObligationGroupsObligationGroupIdPut 200
+            response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Void'
+    delete:
+      description: Deletes link between engagement and obligation group and it's underlying
+        objects
+      operationId: apiV1TenantTenantIdObligationGroupsObligationGroupIdDelete
+      parameters:
+        - name: tenantId
+          in: path
+          description: Id of tenant on which obligation group resides
+          required: true
+          schema:
+            type: string
+        - name: obligationGroupId
+          in: path
+          description: Id of obligation group to sync engagement with
+          required: true
+          schema:
+            type: string
+        - name: engagementId
+          in: query
+          description: Id of engagement to sync with obligation group
+          required: true
+          schema:
+            type: string
+        - name: x-on-behalf-of-ppid
+          in: header
+          description: id of EC user invoking the syncronisation
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Link deletion succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Void'
+        "400":
+          description: Invalid input
+  /api/v1/engagement/{engagementId}/:
+    get:
+      description: get details of engagement
+      operationId: apiV1TenantsEngagementIdEngagementGet
+      parameters:
+        - name: engagementId
+          in: path
+          description: Id of engagement to fetch details of
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: details of engagement
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Engagement'
+        "404":
+          description: missing engagement for given id
+components:
+  schemas:
+    ObligationGroup:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Get id
+        name:
+          type: string
+          description: Get name
+          example: Obligation Group 1
+        validFrom:
+          type: string
+          description: Get validFrom
+          example: Mon Aug 29 00:00:00 GMT 2016
+    Tenant:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Get id
+          example: "2768ecint23testing1"
+        label:
+          type: string
+          description: Get label
+          example: Tenant 1
+        dataParam:
+          type: string
+          description: Get dataParam
+          example: https://2768ecint23testing1.dev.itx.com
+      description: Tenant
+    Engagement:
+      type: object
+      properties:
+        id:
+          type: string
+          description: engagement's id
+          example: 1ecf26cc-d14c-43df-9301-2b0d24c01dc5
+        name:
+          type: string
+          description: engagement's name
+          example: VAT 2020 Poland
+        linked:
+          type: boolean
+          description: is engagement linked with obligation group
+        tenant:
+          type: string
+          description:  tenant's id to which engagement is linked
+        groupName:
+          type: string
+          description:  obligation group name that this engagement is linked to
+          example: ES - HRL4
+    Void:
+      type: object
