@@ -9,7 +9,7 @@ COPY swagger-openam-stage.yml /usr/share/nginx/html/swagger-config.yaml
 #ENV SWAGGER_JSON="openapi.yml"
 ENV URLS="[{url: 'openapi.yaml', name: 'Adapter'}]"
 ENV PORT="8080"
-ENV OAUTH2_REDIRECT_URL="https://ecadapter.dev..com/adapter/swagger/views/swagger-ui/oauth2-redirect.html"
+ENV OAUTH2_REDIRECT_URL="https://ecadapter.dev.com/adapter/swagger/views/swagger-ui/oauth2-redirect.html"
 ENV OAUTH_CLIENT_ID="urn:adapter"
 ENV OAUTH_SCOPES="openid profile PPI cloudEmail preferredMail"
 ENV OAUTH_USE_PKCE="true"
